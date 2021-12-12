@@ -2,15 +2,15 @@
 
 Python tools for MSX development
 
-## MSXSymbols Class
+## MSXSymbols class
 To manipule MSX BIOS and BASIC assembly symbols
 
-## MSXDisasm Class
+## MSXDisasm class
 To disassemble MSX Z80 code using BIOS/BASIC symbols and allowing for 
 format specification, docstrings, line-by-line choice of hex/dec/bin 
 value representation, and so on.
 
-## Package Installation:
+## Package installation:
 
 Run `make install`
 
@@ -26,7 +26,7 @@ rom.load_rom(rom_fname)
 rom.disassemble(beg, end)
 print(rom.to_string())
 ```
-## Scripts installed
+## Installed scripts
 
 - `msxdev-disasm-bios.py`
 
