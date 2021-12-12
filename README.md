@@ -23,7 +23,7 @@ from msxdev import MSXDisasm
 rom_fname = './GOONIES.ROM' # replace with ROM filename
 rom = MSXDisasm()
 rom.load_rom(rom_fname)
-rom.disassemble(beg, end)
+rom.disassemble(beg=rom.org, end=rom.org + 100)
 print(rom.to_string())
 ```
 ## Installed scripts
