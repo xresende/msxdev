@@ -18,8 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# NOTE: Modified by Ximenes R. Resende (xresende@gmail.com)
 # NOTE: https://shred.zone/cilla/page/426/z80-disassembler.html
+#
+# NOTE: Modified by Ximenes R. Resende (xresende@gmail.com)
+#       MSXDev - a Python Development Package for MSX
 
 from struct import unpack
 

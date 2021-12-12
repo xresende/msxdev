@@ -1,9 +1,9 @@
 # coding=utf-8
 #
-# msxdis - a MSX disassembler package
+# MSXDev - a Python Development Package for MSX
 #
 # Copyright (C) 2019 Ximenes R. Resende
-#   https://github.com/xresende/msxdis
+#   https://github.com/xresende/msxdev
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
