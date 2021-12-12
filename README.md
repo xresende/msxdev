@@ -14,7 +14,7 @@ value representation, and so on.
 
 Run `make install`
 
-## Exaples of package usage:
+## Examples of package usage:
 
 ```Python3
 
