@@ -7,21 +7,21 @@ EXPTBL:         equ 0xFCC1          ; 4 slots, (0x00=não expandido, 0x80=expand
 
 LF:             equ	0Ah
 CR:             equ 0Dh
-PageSize:       equ 4000h	        ; 16kB
+PageSize:       equ 4000h           ; 16kB
 
 
      org &4000h
     
 ; --- ROM header ---
 
-     db  "AB"        ; ID for auto-executable ROM
-     dw  INIT        ; Main program execution address
-     dw  0           ; STATEMENT
-     dw  0           ; DEVICE
-     dw  0           ; TEXT
-     dw  0,0,0       ; Reserved
+     db  "AB"                       ; ID for auto-executable ROM
+     dw  INIT                       ; Main program execution address
+     dw  0                          ; STATEMENT
+     dw  0                          ; DEVICE
+     dw  0                          ; TEXT
+     dw  0,0,0                      ; Reserved
 
-     ds 4091h - $,255	     ; Fill the unused  with 0FFh
+     ds 4091h - $,255               ; Fill the unused  with 0FFh
      
 INIT:	; Program code entry point label
 
@@ -30,7 +30,7 @@ INIT:	; Program code entry point label
  	call RSLREG
   	rrca
  	rrca
- 	and	3	               ;Keep bits corresponding to the page 4000h-7FFFh
+ 	and	3	               ; Keep bits corresponding to the page 4000h-7FFFh
  	ld	c,a
  	ld	b,0
  	ld	hl,EXPTBL
