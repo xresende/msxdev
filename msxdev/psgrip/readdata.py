@@ -99,38 +99,38 @@ INIT:	; Program code entry point label
 
 ; Typical routine to select the ROM on page 8000h-BFFFh from page 4000h-7BFFFh
 
-    call RSLREG
-    rrca
-    rrca
-    and	3	             ; Keep bits corresponding to the page 4000h-7FFFh
-    ld	c,a
-    ld	b,0
-    ld	hl,EXPTBL
-    add	hl,bc
-    ld	a,(hl)
-    and	80h
-    or	c
-    ld	c,a
-    inc	hl
-    inc	hl
-    inc	hl
-    inc	hl
-    ld	a,(hl)
-    and	0Ch
-    or	c
-    ld	h,080h
-    call ENASLT          ; Select the ROM on page 8000h-BFFFh
+     call RSLREG
+     rrca
+     rrca
+     and	3	             ; Keep bits corresponding to the page 4000h-7FFFh
+     ld	c,a
+     ld	b,0
+     ld	hl,EXPTBL
+     add	hl,bc
+     ld	a,(hl)
+     and	80h
+     or	c
+     ld	c,a
+     inc	hl
+     inc	hl
+     inc	hl
+     inc	hl
+     ld	a,(hl)
+     and	0Ch
+     or	c
+     ld	h,080h
+     call ENASLT          ; Select the ROM on page 8000h-BFFFh
 
-    di
-    call INITXT
+     di
+     call INITXT
     
-    ld	    hl,text1     ; Text pointer into HL
-    call    print        ; Call the routine print below
+     ld	    hl,text1     ; Text pointer into HL
+     call    print        ; Call the routine print below
 
-    call PLAY
+     call PLAY
 
-    ld      hl,text2    ; Text pointer into HL
-    call    print       ; Call the routine print below
+     ld      hl,text2    ; Text pointer into HL
+     call    print       ; Call the routine print below
 
 _halt:
      jr  _halt
