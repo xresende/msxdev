@@ -5,7 +5,7 @@ CHPUT:          equ 0x00A2          ; Escreve caractere na tela
 RSLREG:         equ 0x0138          ; Lê registrador do slot primário
 EXPTBL:         equ 0xFCC1          ; 4 slots, (0x00=não expandido, 0x80=expandido)
 
-LF:             equ	0Ah
+LF:             equ 0Ah
 CR:             equ 0Dh
 PageSize:       equ 4000h           ; 16kB
 
