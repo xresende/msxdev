@@ -68,15 +68,15 @@ def define_block_routines(lines, blocks):
 def asm_header():
     
     text = """
-ENASLT:		equ 0x0024			; Mapeia slot
-INITXT:		equ 0x006C			; Inicializa VDP em modo texto 40x24
-CHPUT:		equ 0x00A2			; Escreve caractere na tela
-RSLREG:		equ 0x0138			; Lê registrador do slot primário
-EXPTBL:		equ 0xFCC1			; 4 slots, (0x00=não expandido, 0x80=expandido)
+ENASLT:         equ 0x0024          ; Mapeia slot
+INITXT:         equ 0x006C          ; Inicializa VDP em modo texto 40x24
+CHPUT:          equ 0x00A2          ; Escreve caractere na tela
+RSLREG:         equ 0x0138          ; Lê registrador do slot primário
+EXPTBL:         equ 0xFCC1          ; 4 slots, (0x00=não expandido, 0x80=expandido)
 
-LF:       equ	0Ah
-CR:	     equ	0Dh
-PageSize: equ 4000h	; 16kB
+LF:             equ	0Ah
+CR:             equ 0Dh
+PageSize:       equ 4000h	        ; 16kB
 
 
      org &4000h
@@ -143,7 +143,7 @@ print:
 text1:			; Text pointer label
  	db "MSX PSG Rip Off by Ximenes R. Resende",LF,CR	
      db LF,CR
-     db "waiting...",0
+     db "playing ... ",0
 text2:
      db "finished.",LF,CR,0
 
@@ -178,7 +178,7 @@ def asm_end():
     print()
     print()
     print('fill:')
-    print('     ds PageSize - ($ - 8000h),255	; Fill the unused aera with 0FFh')
+    print('     ds PageSize - ($ - 8000h),255	; Fill the unused area with 0xFF')
 
 
 def generate_asm2(newlines, routines):
