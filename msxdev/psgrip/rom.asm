@@ -1,4 +1,8 @@
 
+    ;
+    ; KONAMI BOXING - PSG Rip Off by X.R.Resende (xresende@gmail.com)
+    ;
+
 ENASLT:         equ 0x0024          ; Mapeia slot
 INITXT:         equ 0x006C          ; Inicializa VDP em modo texto 40x24
 CHPUT:          equ 0x00A2          ; Escreve caractere na tela
@@ -30,7 +34,7 @@ INIT:	; Program code entry point label
  	call RSLREG
   	rrca
  	rrca
- 	and	3	               ; Keep bits corresponding to the page 4000h-7FFFh
+ 	and	3	             ; Keep bits corresponding to the page 4000h-7FFFh
  	ld	c,a
  	ld	b,0
  	ld	hl,EXPTBL
@@ -71,8 +75,8 @@ print:
  	inc	hl		    ; Increment the HL value.
  	jr	print		; Relative jump to the address in the label Print.
 
-text1:			; Text pointer label
- 	db "MSX PSG Rip Off by Ximenes R. Resende",LF,CR	
+text1:
+ 	 db "MSX PSG Rip Off by Ximenes R. Resende",LF,CR	
      db LF,CR
      db "playing ... ",0
 text2:

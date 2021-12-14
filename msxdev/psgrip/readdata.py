@@ -64,10 +64,13 @@ def define_block_routines(lines, blocks):
     return newlines, routines
 
 
-
-def asm_header():
+def asm_header(title):
     
     text = """
+    ;
+    ; <TITLE> - PSG Rip Off by X.R.Resende (xresende@gmail.com)
+    ;
+
 ENASLT:         equ 0x0024          ; Mapeia slot
 INITXT:         equ 0x006C          ; Inicializa VDP em modo texto 40x24
 CHPUT:          equ 0x00A2          ; Escreve caractere na tela
@@ -96,52 +99,52 @@ INIT:	; Program code entry point label
 
 ; Typical routine to select the ROM on page 8000h-BFFFh from page 4000h-7BFFFh
 
- 	call RSLREG
-  	rrca
- 	rrca
- 	and	3	               ; Keep bits corresponding to the page 4000h-7FFFh
- 	ld	c,a
- 	ld	b,0
- 	ld	hl,EXPTBL
- 	add	hl,bc
- 	ld	a,(hl)
- 	and	80h
- 	or	c
- 	ld	c,a
- 	inc	hl
- 	inc	hl
- 	inc	hl
- 	inc	hl
- 	ld	a,(hl)
- 	and	0Ch
- 	or	c
- 	ld	h,080h
- 	call ENASLT		     ; Select the ROM on page 8000h-BFFFh
+    call RSLREG
+    rrca
+    rrca
+    and	3	             ; Keep bits corresponding to the page 4000h-7FFFh
+    ld	c,a
+    ld	b,0
+    ld	hl,EXPTBL
+    add	hl,bc
+    ld	a,(hl)
+    and	80h
+    or	c
+    ld	c,a
+    inc	hl
+    inc	hl
+    inc	hl
+    inc	hl
+    ld	a,(hl)
+    and	0Ch
+    or	c
+    ld	h,080h
+    call ENASLT          ; Select the ROM on page 8000h-BFFFh
 
     di
     call INITXT
     
-    ld	hl,text1         ; Text pointer into HL
-    call  print		     ; Call the routine print below
+    ld	    hl,text1     ; Text pointer into HL
+    call    print        ; Call the routine print below
 
     call PLAY
 
-    ld   hl,text2        ; Text pointer into HL
-    call print           ; Call the routine print below
+    ld      hl,text2    ; Text pointer into HL
+    call    print       ; Call the routine print below
 
 _halt:
      jr  _halt
     
 print:
- 	ld	a,(hl)		; Load the byte from memory at address indicated by HL to A.
- 	and	a		    ; Same as CP 0 but faster.
- 	ret	z		    ; Back behind the call print if A = 0
- 	call CHPUT		; Call the routine to display a character.
- 	inc	hl		    ; Increment the HL value.
- 	jr	print		; Relative jump to the address in the label Print.
+     ld     a,(hl)		; Load the byte from memory at address indicated by HL to A.
+     and    a		    ; Same as CP 0 but faster.
+     ret    z		    ; Back behind the call print if A = 0
+     call   CHPUT		; Call the routine to display a character.
+     inc    hl		    ; Increment the HL value.
+     jr     print		; Relative jump to the address in the label Print.
 
-text1:			; Text pointer label
- 	db "MSX PSG Rip Off by Ximenes R. Resende",LF,CR	
+text1:
+ 	 db "MSX PSG Rip Off by Ximenes R. Resende",LF,CR	
      db LF,CR
      db "playing ... ",0
 text2:
@@ -170,6 +173,7 @@ wait88:
      ret               ; -- 10
     """
 
+    text = text.replace('<TITLE>', title)
     for line in text.splitlines():
         print(line)
 
@@ -181,9 +185,9 @@ def asm_end():
     print('     ds PageSize - ($ - 8000h),255	; Fill the unused area with 0xFF')
 
 
-def generate_asm2(newlines, routines):
+def generate_asm(title, newlines, routines):
 
-    asm_header()
+    asm_header(title)
 
     print('PLAY:')
     last_tick = None
@@ -231,50 +235,6 @@ def generate_asm2(newlines, routines):
     asm_end()
 
 
-def generate_asm(newlines, routines):
-
-    print('PLAY:')
-    last_tick = None
-    for line in newlines:
-        _, cpu_tick, inst = line
-        if last_tick is None:
-            last_tick = cpu_tick
-        dtime = cpu_tick - last_tick
-        if dtime:
-            # 37 + BC * 88 time cycles
-            div = int((dtime - 37) // 88)
-            res = dtime - (37 + div * 88)
-            div2 = int(div // 0xffff)
-            res2 = div - div2 * 0xffff
-            print('     ; wait for {} time cycles'.format(dtime))
-            for _ in range(div2):
-                print('     ld  bc, 0xFFFF')
-                print('     call wait88')
-            print('     ld  bc, {}'.format(res2))
-            print('     call wait88')
-            print('     ; lacking {} cycles'.format(res))
-        print('     ' + inst)
-        last_tick = cpu_tick
-    print('     ret')
-    
-    print(';')
-    print('; --- VDP interaction subroutines ---')
-    print(';')
-    for label, routine in routines.items():
-        print(label + ':')
-        for line in routine:
-            _, reg, val = line[2].split()
-            # reg = reg.replace('(','').replace('),','')
-            print(' '*len(label) + 'ld  a,{}'.format(val))
-            print(' '*len(label) + 'out {} a'.format(reg))
-        print('     ret')
-
-    print()
-    print()
-    print('fill:')
-    print('     ds PageSize - ($ - 8000h),255	; Fill the unused aera with 0FFh')
-
-
 def process_inst_file(fname, dtick_thresdold, plot_dtick):
     lines = read_datafile(fname)
     dtick, blocks = find_blocks(lines, dtick_thresdold)
@@ -286,31 +246,45 @@ def process_inst_file(fname, dtick_thresdold, plot_dtick):
     return lines, dtick, blocks
 
 
-lines, dtick, blocks = process_inst_file('psg.txt', 10000, False)
-fname = 'psg.txt'
-
-# for block in blocks:
-#     print('({},{}):'.format(*block))
-#     for i in range(*block):
-#         print(lines[i])
-
-   
-newlines, routines = define_block_routines(lines, blocks)
+def print_blocks_and_lines(blocks, lines):
+    for block in blocks:
+        print('({},{}):'.format(*block))
+        for i in range(*block):
+            print(lines[i])
 
 
-# counter = 1
-# for line in newlines:
-#     # print(line)
-#     _, tick, inst = line
-#     _, label = inst.split()
-#     if label not in routines:
-#         continue
-#     # print(label)
-#     lines = routines[label]
-#     # print(lines)
-#     for line_ in lines:
-#         print('{:06d} {:012d} {}'.format(counter, line_[1], line_[2]))
-#         counter += 1
-    
-generate_asm2(newlines, routines)
+def print_code_routine(newlines, routines):
+    counter = 1
+    for line in newlines:
+        # print(line)
+        _, tick, inst = line
+        _, label = inst.split()
+        if label not in routines:
+            continue
+        # print(label)
+        lines = routines[label]
+        # print(lines)
+        for line_ in lines:
+            print('{:06d} {:012d} {}'.format(counter, line_[1], line_[2]))
+            counter += 1
+
+
+def run():
+
+    fname = 'psg.txt'
+
+    # all register seetings apart from each other less than this number of cycles are lumped together
+    dtick_threshold = 10000  
+
+    lines, dtick, blocks = process_inst_file(fname, dtick_threshold, False)
+    # print_blocks_and_lines(blocks, lines)
+
+    newlines, routines = define_block_routines(lines, blocks)
+    # print_code_routine(newlines, routines)
+
+        
+    generate_asm('KONAMI BOXING', newlines, routines)
+
+
+run()
 
